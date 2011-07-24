@@ -1,12 +1,12 @@
 /*
- * RenderableForm.h
+ * HCBULRenderableForm.h
  *
  *  Created on: 18/gen/2011
  *      Author: Alkemist
  */
 
-#ifndef RENDERABLEFORM_H_
-#define RENDERABLEFORM_H_
+#ifndef HCBULRenderableForm_H_
+#define HCBULRenderableForm_H_
 
 #include <FApp.h>
 #include <FBase.h>
@@ -17,13 +17,13 @@
 
 #include "GL/GlCommons.h"
 
-class RenderableForm: public Osp::Ui::Controls::Form,
+class HCBULRenderableForm: public Osp::Ui::Controls::Form,
         public Osp::Base::Runtime::Thread,
         public Osp::Base::Runtime::ITimerEventListener {
 
     public:
-        RenderableForm();
-        virtual ~RenderableForm();
+        HCBULRenderableForm();
+        virtual ~HCBULRenderableForm();
 
     public:
         void OnTimerExpired(Osp::Base::Runtime::Timer & timer);
@@ -60,4 +60,4 @@ class RenderableForm: public Osp::Ui::Controls::Form,
 
 };
 
-#endif /* RENDERABLEFORM_H_ */
+#endif /* HCBULRenderableForm_H_ */

@@ -36,16 +36,22 @@ class HCBULFormManager: public Osp::Ui::Controls::Form {
         static void PopForm();
 
         /*
-         * PopToRootForm()
-         * Removes all the stacked forms, except the root form
-         * */
-        static void PopToRootForm();
-
-        /*
          * Initialize()
          * Call this to initialize the navigation stack
          * */
         static void Initialize();
+
+        /*
+         * OnForeground()
+         * Must be called when the app goes to foreground
+         * */
+        static void OnForeground();
+
+        /*
+         * OnBackground()
+         * Must be called when the app goes to background
+         * */
+        static void OnBackground();
 
         /*
          * Terminate()
@@ -53,13 +59,28 @@ class HCBULFormManager: public Osp::Ui::Controls::Form {
          * */
         static void Terminate();
 
+        /*
+         * NumberOfFormsInStack()
+         * Returns the size of the current navigation stack
+         * */
+        static int NumberOfFormsInStack();
+
     private:
 
         /*
          * DestroyLastFormInStack()
-         * Destroys the last form in the stack, useful when poppingf forms from the stack
+         * Destroys the last form in the stack, useful when popping forms from the stack
          * */
         static void DestroyLastFormInStack();
+
+        /*
+         * CheckInitState()
+         * Checks if the form manager has been initialized, throws an error if not
+         * */
+        static void CheckInitState();
+
+    private:
+        static bool _initialized;
 
 };
 
