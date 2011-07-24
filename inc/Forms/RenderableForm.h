@@ -15,6 +15,8 @@
 #include <FGraphicsOpengl.h>
 #include <FGraphicsOpengl2.h>
 
+#include "GL/GlCommons.h"
+
 class RenderableForm: public Osp::Ui::Controls::Form,
         public Osp::Base::Runtime::Thread,
         public Osp::Base::Runtime::ITimerEventListener {

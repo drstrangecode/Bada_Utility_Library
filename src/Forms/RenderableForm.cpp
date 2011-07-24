@@ -147,30 +147,6 @@ void RenderableForm::InitGL() {
     gluPerspective(45.0, fWidth / fHeight, 1, 100);
     GL_ASSERT("gluPerspective()");
 
-    glMatrixMode(GL_MODELVIEW);
-    GL_ASSERT("glMatrixMode(GL_MODELVIEW)");
-
-    glFrontFace(GL_CCW);
-    GL_ASSERT("glFrontFace");
-
-    glDisable(GL_CULL_FACE);
-    GL_ASSERT("glDisable");
-
-    glCullFace(GL_BACK);
-    GL_ASSERT("glCullFace");
-
-    glShadeModel(GL_FLAT);
-    GL_ASSERT("glShadeModel");
-
-    glEnableClientState(GL_VERTEX_ARRAY);
-    GL_ASSERT("glEnableClientState(GL_VERTEX_ARRAY)");
-
-    glDisableClientState(GL_NORMAL_ARRAY);
-    GL_ASSERT("glDisableClientState(GL_NORMAL_ARRAY)");
-
-    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-    GL_ASSERT("glDisableClientState(GL_TEXTURE_COORD_ARRAY)");
-
 }
 
 void RenderableForm::DestroyGL() {
