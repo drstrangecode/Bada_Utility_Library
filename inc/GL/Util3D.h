@@ -48,11 +48,10 @@
 
 #include <math.h>
 
+namespace DSBadaUtilityLib {
+
 #define DEGREES_TO_RADIANS(__ANGLE__) ((__ANGLE__) / 180.0 * M_PI)
 
 void gluPerspective(double fovy, double aspect, double zNear, double zFar);
-/*
-void gluLookAt(GLfloat eyex, GLfloat eyey, GLfloat eyez,
-			   GLfloat centerx, GLfloat centery, GLfloat centerz,
-			   GLfloat upx, GLfloat upy, GLfloat upz);
-			   */
+
+}

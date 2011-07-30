@@ -1,12 +1,12 @@
 /*
- * HCBULRenderableForm.h
+ * OpenGLRenderForm.h
  *
  *  Created on: 18/gen/2011
  *      Author: Alkemist
  */
 
-#ifndef HCBULRenderableForm_H_
-#define HCBULRenderableForm_H_
+#ifndef OpenGLRenderForm_H_
+#define OpenGLRenderForm_H_
 
 #include <FApp.h>
 #include <FBase.h>
@@ -17,13 +17,15 @@
 
 #include "GL/GlCommons.h"
 
-class HCBULRenderableForm: public Osp::Ui::Controls::Form,
+namespace DSBadaUtilityLib {
+
+class OpenGLRenderForm: public Osp::Ui::Controls::Form,
         public Osp::Base::Runtime::Thread,
         public Osp::Base::Runtime::ITimerEventListener {
 
     public:
-        HCBULRenderableForm();
-        virtual ~HCBULRenderableForm();
+        OpenGLRenderForm();
+        virtual ~OpenGLRenderForm();
 
     public:
         void OnTimerExpired(Osp::Base::Runtime::Timer & timer);
@@ -60,4 +62,6 @@ class HCBULRenderableForm: public Osp::Ui::Controls::Form,
 
 };
 
-#endif /* HCBULRenderableForm_H_ */
+}
+
+#endif /* OpenGLRenderForm_H_ */

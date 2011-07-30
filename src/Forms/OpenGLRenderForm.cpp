@@ -1,15 +1,13 @@
 /*
- * HCBULRenderableForm.cpp
+ * OpenGLRenderForm.cpp
  *
  *  Created on: 18/gen/2011
  *  Author: Alkemist
  */
 
-#include "Forms/HCBULRenderableForm.h"
+#include "Forms/OpenGLRenderForm.h"
 #include "GL/GlCommons.h"
 #include "GL/Util3D.h"
-
-#define TIMER_INTERVAL_MS 10
 
 using namespace Osp::App;
 using namespace Osp::Base;
@@ -19,14 +17,18 @@ using namespace Osp::Ui::Controls;
 using namespace Osp::System;
 using namespace Osp::Graphics::Opengl;
 
-HCBULRenderableForm::HCBULRenderableForm() {
+namespace DSBadaUtilityLib {
+
+#define TIMER_INTERVAL_MS 10
+
+OpenGLRenderForm::OpenGLRenderForm() {
 }
 
-HCBULRenderableForm::~HCBULRenderableForm() {
+OpenGLRenderForm::~OpenGLRenderForm() {
 }
 
-bool HCBULRenderableForm::OnStart() {
-    AppLog("HCBULRenderableForm::OnStart() [Starting render thread]");
+bool OpenGLRenderForm::OnStart() {
+    AppLog("OpenGLRenderForm::OnStart() [Starting render thread]");
 
     InitEGL();
     InitGL();
@@ -40,8 +42,8 @@ bool HCBULRenderableForm::OnStart() {
     return true;
 }
 
-void HCBULRenderableForm::OnStop() {
-    AppLog("HCBULRenderableForm::OnStop() [Stopping render thread]");
+void OpenGLRenderForm::OnStop() {
+    AppLog("OpenGLRenderForm::OnStop() [Stopping render thread]");
 
     DestroyGL();
 
@@ -52,32 +54,32 @@ void HCBULRenderableForm::OnStop() {
 
 }
 
-result HCBULRenderableForm::OnInitializing(void) {
+result OpenGLRenderForm::OnInitializing(void) {
     result r = E_SUCCESS;
     StartRendering();
     return r;
 }
 
-result HCBULRenderableForm::OnTerminating(void) {
+result OpenGLRenderForm::OnTerminating(void) {
     result r = E_SUCCESS;
     StopRendering();
     return r;
 }
 
-void HCBULRenderableForm::StartRendering() {
-    AppLog("HCBULRenderableForm::StartRendering()");
+void OpenGLRenderForm::StartRendering() {
+    AppLog("OpenGLRenderForm::StartRendering()");
     Thread::Construct(THREAD_TYPE_EVENT_DRIVEN);
     this->Start();
 }
 
-void HCBULRenderableForm::StopRendering() {
-    AppLog("HCBULRenderableForm::StopRendering()");
+void OpenGLRenderForm::StopRendering() {
+    AppLog("OpenGLRenderForm::StopRendering()");
     this->Stop();
     this->Join();
 }
 
-void HCBULRenderableForm::InitEGL() {
-    AppLog("HCBULRenderableForm::InitEGL()");
+void OpenGLRenderForm::InitEGL() {
+    AppLog("OpenGLRenderForm::InitEGL()");
 
     eglBindAPI(EGL_OPENGL_ES_API);
     AppAssertf(EGL_SUCCESS == eglGetError(), "eglBindAPI failed");
@@ -115,14 +117,14 @@ void HCBULRenderableForm::InitEGL() {
 
 }
 
-void HCBULRenderableForm::InitGL() {
-    AppLog("HCBULRenderableForm::InitGL()");
+void OpenGLRenderForm::InitGL() {
+    AppLog("OpenGLRenderForm::InitGL()");
 
     int x = 0, y = 0, width = 0, height = 0;
     // get the width & height of the screen
     Application::GetInstance()->GetAppFrame()->GetFrame()->GetBounds(x, y, width, height);
 
-    AppLog("HCBULRenderableForm: View bounds: %d %d %d %d", x, y, width, height);
+    AppLog("OpenGLRenderForm: View bounds: %d %d %d %d", x, y, width, height);
 
     glViewport(x, y, width, height);
     GL_ASSERT("glViewport");
@@ -149,7 +151,7 @@ void HCBULRenderableForm::InitGL() {
 
 }
 
-void HCBULRenderableForm::DestroyGL() {
+void OpenGLRenderForm::DestroyGL() {
     if (eDisplay) {
         eglMakeCurrent(eDisplay, null, null, null);
 
@@ -168,8 +170,10 @@ void HCBULRenderableForm::DestroyGL() {
     }
 }
 
-void HCBULRenderableForm::OnTimerExpired(Osp::Base::Runtime::Timer & timer) {
+void OpenGLRenderForm::OnTimerExpired(Osp::Base::Runtime::Timer & timer) {
     _timer->Start(TIMER_INTERVAL_MS);
     OnDrawFrame();
     eglSwapBuffers(eDisplay, eSurface);
+}
+
 }
