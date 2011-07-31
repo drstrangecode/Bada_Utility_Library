@@ -12,31 +12,9 @@
 #include <FBase.h>
 #include <FUi.h>
 
+#include "StackBasedNavigationForm.h"
+
 namespace DSBadaUtilityLib {
-
-    class IStackBasedNavigationForm: public Osp::Ui::Controls::Form {
-        public:
-            /*
-             * FormWillAppear(): called before a form is made visible to the user
-             * */
-            virtual void FormWillAppear() {};
-
-            /*
-             * FormWillDisappear(): called before a form removed from the app frame
-             * */
-            virtual void FormWillDisappear() {};
-
-            /*
-             * ReceivedLowMemoryAlert(): called when a low memory level is detected
-             * It is advisable for the form to free some memory when this happens
-             * */
-            virtual void ReceivedLowMemoryAlert() {};
-
-            /*
-             * ReceivedLowBatteryAlert(): called when a low battery level is detected
-             * */
-            virtual void ReceivedLowBatteryAlert() {};
-    };
 
     class FormNavigationManager: public Osp::Ui::Controls::Form {
 
@@ -68,13 +46,13 @@ namespace DSBadaUtilityLib {
              * SetRootForm()
              * Sets a root form for the current navigation stack
              * */
-            void SetRootForm(IStackBasedNavigationForm * form);
+            void SetRootForm(StackBasedNavigationForm * form);
 
             /*
              * PushForm()
              * Pushes a new form onto the current navigation stack
              * */
-            void PushForm(IStackBasedNavigationForm * form);
+            void PushForm(StackBasedNavigationForm * form);
 
             /*
              * PopForm()

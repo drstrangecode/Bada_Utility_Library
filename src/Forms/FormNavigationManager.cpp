@@ -48,7 +48,7 @@ namespace DSBadaUtilityLib {
         if (NumberOfFormsInCurrentStack() == 0)
             return;
 
-        IStackBasedNavigationForm * form = static_cast<IStackBasedNavigationForm *> (_currentFormsStack.GetAt(_currentFormsStack.GetCount() - 1));
+        StackBasedNavigationForm * form = static_cast<StackBasedNavigationForm *> (_currentFormsStack.GetAt(_currentFormsStack.GetCount() - 1));
         form->FormWillDisappear();
     }
 
@@ -56,7 +56,7 @@ namespace DSBadaUtilityLib {
         if (NumberOfFormsInCurrentStack() == 0)
             return;
 
-        IStackBasedNavigationForm * form = static_cast<IStackBasedNavigationForm *> (_currentFormsStack.GetAt(_currentFormsStack.GetCount() - 1));
+        StackBasedNavigationForm * form = static_cast<StackBasedNavigationForm *> (_currentFormsStack.GetAt(_currentFormsStack.GetCount() - 1));
         form->FormWillAppear();
     }
 
@@ -66,7 +66,7 @@ namespace DSBadaUtilityLib {
         if (NumberOfFormsInCurrentStack() == 0)
             return;
 
-        IStackBasedNavigationForm * form = static_cast<IStackBasedNavigationForm *> (_currentFormsStack.GetAt(_currentFormsStack.GetCount() - 1));
+        StackBasedNavigationForm * form = static_cast<StackBasedNavigationForm *> (_currentFormsStack.GetAt(_currentFormsStack.GetCount() - 1));
         form->ReceivedLowMemoryAlert();
     }
 
@@ -76,7 +76,7 @@ namespace DSBadaUtilityLib {
         if (NumberOfFormsInCurrentStack() == 0)
             return;
 
-        IStackBasedNavigationForm * form = static_cast<IStackBasedNavigationForm *> (_currentFormsStack.GetAt(_currentFormsStack.GetCount() - 1));
+        StackBasedNavigationForm * form = static_cast<StackBasedNavigationForm *> (_currentFormsStack.GetAt(_currentFormsStack.GetCount() - 1));
         form->ReceivedLowBatteryAlert();
     }
 
@@ -84,7 +84,7 @@ namespace DSBadaUtilityLib {
         return _currentFormsStack.GetCount();
     }
 
-    void FormNavigationManager::PushForm(IStackBasedNavigationForm * form) {
+    void FormNavigationManager::PushForm(StackBasedNavigationForm * form) {
 
         ArrayList * list = new ArrayList();
         list->Add(*form);
@@ -92,7 +92,7 @@ namespace DSBadaUtilityLib {
         SendUserEvent(FormNavigationManager::PUSH_FORM, list);
     }
 
-    void FormNavigationManager::SetRootForm(IStackBasedNavigationForm * form) {
+    void FormNavigationManager::SetRootForm(StackBasedNavigationForm * form) {
 
         ArrayList * list = new ArrayList();
         list->Add(*form);
@@ -114,7 +114,7 @@ namespace DSBadaUtilityLib {
 
                 Frame * pFrame = Application::GetInstance()->GetAppFrame()->GetFrame();
 
-                IStackBasedNavigationForm * nextform = static_cast<IStackBasedNavigationForm *> (pArgs->GetAt(0));
+                StackBasedNavigationForm * nextform = static_cast<StackBasedNavigationForm *> (pArgs->GetAt(0));
                 nextform->FormWillAppear();
 
                 // Add new form in the stack
@@ -137,8 +137,8 @@ namespace DSBadaUtilityLib {
 
                 AppAssertf(NumberOfFormsInCurrentStack() > 0, "This navigation stack has no root form, please set a root form with SetRootForm()");
 
-                IStackBasedNavigationForm * nextform = static_cast<IStackBasedNavigationForm *> (pArgs->GetAt(0));
-                IStackBasedNavigationForm * currentForm = static_cast<IStackBasedNavigationForm *> (_currentFormsStack.GetAt(_currentFormsStack.GetCount() - 1));
+                StackBasedNavigationForm * nextform = static_cast<StackBasedNavigationForm *> (pArgs->GetAt(0));
+                StackBasedNavigationForm * currentForm = static_cast<StackBasedNavigationForm *> (_currentFormsStack.GetAt(_currentFormsStack.GetCount() - 1));
 
                 Frame * pFrame = Application::GetInstance()->GetAppFrame()->GetFrame();
 
@@ -168,8 +168,8 @@ namespace DSBadaUtilityLib {
                 Frame *pFrame = Application::GetInstance()->GetAppFrame()->GetFrame();
 
                 if (_currentFormsStack.GetCount() > 1) {
-                    IStackBasedNavigationForm * nextform = static_cast<IStackBasedNavigationForm *> (_currentFormsStack.GetAt(_currentFormsStack.GetCount() - 2));
-                    IStackBasedNavigationForm * currentForm = static_cast<IStackBasedNavigationForm *> (_currentFormsStack.GetAt(_currentFormsStack.GetCount() - 1));
+                    StackBasedNavigationForm * nextform = static_cast<StackBasedNavigationForm *> (_currentFormsStack.GetAt(_currentFormsStack.GetCount() - 2));
+                    StackBasedNavigationForm * currentForm = static_cast<StackBasedNavigationForm *> (_currentFormsStack.GetAt(_currentFormsStack.GetCount() - 1));
 
                     currentForm->FormWillDisappear();
 
