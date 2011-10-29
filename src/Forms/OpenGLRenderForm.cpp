@@ -22,6 +22,7 @@ namespace DSBadaUtilityLib {
 #define TIMER_INTERVAL_MS 10
 
 OpenGLRenderForm::OpenGLRenderForm() {
+	isRendering = false;
 }
 
 OpenGLRenderForm::~OpenGLRenderForm() {
@@ -31,7 +32,6 @@ bool OpenGLRenderForm::OnStart() {
     AppLog("OpenGLRenderForm::OnStart() [Starting render thread]");
 
     InitEGL();
-    InitGL();
 
     OnStartRendering();
 
@@ -45,10 +45,10 @@ bool OpenGLRenderForm::OnStart() {
 void OpenGLRenderForm::OnStop() {
     AppLog("OpenGLRenderForm::OnStop() [Stopping render thread]");
 
-    DestroyGL();
-
     _timer->Cancel();
     delete _timer;
+
+    DestroyEGL();
 
     OnStopRendering();
 
@@ -56,24 +56,28 @@ void OpenGLRenderForm::OnStop() {
 
 result OpenGLRenderForm::OnInitializing(void) {
     result r = E_SUCCESS;
-    StartRendering();
     return r;
 }
 
 result OpenGLRenderForm::OnTerminating(void) {
     result r = E_SUCCESS;
-    StopRendering();
+    if (isRendering) StopRendering();
     return r;
 }
 
 void OpenGLRenderForm::StartRendering() {
     AppLog("OpenGLRenderForm::StartRendering()");
+
     Thread::Construct(THREAD_TYPE_EVENT_DRIVEN);
     this->Start();
+
+    isRendering = true;
 }
 
 void OpenGLRenderForm::StopRendering() {
-    AppLog("OpenGLRenderForm::StopRendering()");
+
+	isRendering = false;
+
     this->Stop();
     this->Join();
 }
@@ -117,41 +121,7 @@ void OpenGLRenderForm::InitEGL() {
 
 }
 
-void OpenGLRenderForm::InitGL() {
-    AppLog("OpenGLRenderForm::InitGL()");
-
-    int x = 0, y = 0, width = 0, height = 0;
-    // get the width & height of the screen
-    Application::GetInstance()->GetAppFrame()->GetFrame()->GetBounds(x, y, width, height);
-
-    AppLog("OpenGLRenderForm: View bounds: %d %d %d %d", x, y, width, height);
-
-    glViewport(x, y, width, height);
-    GL_ASSERT("glViewport");
-
-    glClearDepthf(1.0f);
-    GL_ASSERT("glClearDepthf");
-
-    glDepthFunc(GL_LEQUAL);
-    GL_ASSERT("glDepthFunc");
-
-    glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-    GL_ASSERT("glHint");
-
-    glDepthMask(GL_TRUE);
-    GL_ASSERT("glDepthMask");
-
-    glEnable(GL_DEPTH_TEST);
-    GL_ASSERT("glEnable(GL_DEPTH_TEST)");
-
-    float fWidth = width;
-    float fHeight = height;
-    gluPerspective(45.0, fWidth / fHeight, 1, 100);
-    GL_ASSERT("gluPerspective()");
-
-}
-
-void OpenGLRenderForm::DestroyGL() {
+void OpenGLRenderForm::DestroyEGL() {
     if (eDisplay) {
         eglMakeCurrent(eDisplay, null, null, null);
 
@@ -171,7 +141,8 @@ void OpenGLRenderForm::DestroyGL() {
 }
 
 void OpenGLRenderForm::OnTimerExpired(Osp::Base::Runtime::Timer & timer) {
-    _timer->Start(TIMER_INTERVAL_MS);
+	_timer->Start(TIMER_INTERVAL_MS);
+
     OnDrawFrame();
     eglSwapBuffers(eDisplay, eSurface);
 }

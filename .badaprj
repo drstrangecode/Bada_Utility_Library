@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <bada>
     <type>2</type>
-    <sdk>C:\bada\1.2.1</sdk>
-    <model>Wave_LP1</model>
+    <sdk>D:\Bada_Development\2.0.2</sdk>
+    <model>WaveWVGA</model>
     <apiversioncheck>true</apiversioncheck>
     <priviligecheck>false</priviligecheck>
     <properties>

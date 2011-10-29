@@ -35,9 +35,7 @@ class OpenGLRenderForm: public Osp::Ui::Controls::Form,
     private:
 
         void InitEGL();
-        void InitGL();
-        void InitLights();
-        void DestroyGL();
+        void DestroyEGL();
 
         Osp::Graphics::Opengl::EGLDisplay eDisplay;
         Osp::Graphics::Opengl::EGLSurface eSurface;
@@ -45,13 +43,13 @@ class OpenGLRenderForm: public Osp::Ui::Controls::Form,
         Osp::Graphics::Opengl::EGLContext eContext;
 
         Osp::Base::Runtime::Timer * _timer;
+        bool isRendering;
 
-    private:
+    public:
         void StartRendering();
         void StopRendering();
 
     protected:
-
         virtual void OnStartRendering() = 0;
         virtual void OnStopRendering() = 0;
         virtual void OnDrawFrame() = 0;
