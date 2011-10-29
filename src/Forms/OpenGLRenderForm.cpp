@@ -61,20 +61,26 @@ result OpenGLRenderForm::OnInitializing(void) {
 
 result OpenGLRenderForm::OnTerminating(void) {
     result r = E_SUCCESS;
-    if (isRendering) StopRendering();
+    StopRendering();
     return r;
 }
 
 void OpenGLRenderForm::StartRendering() {
     AppLog("OpenGLRenderForm::StartRendering()");
 
+    if (isRendering) return;
+
+    isRendering = true;
+
     Thread::Construct(THREAD_TYPE_EVENT_DRIVEN);
     this->Start();
 
-    isRendering = true;
 }
 
 void OpenGLRenderForm::StopRendering() {
+	AppLog("OpenGLRenderForm::StopRendering()");
+
+	if (!isRendering) return;
 
 	isRendering = false;
 
