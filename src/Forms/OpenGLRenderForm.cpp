@@ -45,12 +45,13 @@ bool OpenGLRenderForm::OnStart() {
 void OpenGLRenderForm::OnStop() {
     AppLog("OpenGLRenderForm::OnStop() [Stopping render thread]");
 
-    _timer->Cancel();
-    delete _timer;
+   _timer->Cancel();
+   delete _timer;
 
-    DestroyEGL();
+   OnStopRendering();
 
-    OnStopRendering();
+   DestroyEGL();
+
 
 }
 
@@ -128,6 +129,9 @@ void OpenGLRenderForm::InitEGL() {
 }
 
 void OpenGLRenderForm::DestroyEGL() {
+
+	AppLog("OpenGLRenderForm::DestroyEGL()");
+
     if (eDisplay) {
         eglMakeCurrent(eDisplay, null, null, null);
 
@@ -147,10 +151,13 @@ void OpenGLRenderForm::DestroyEGL() {
 }
 
 void OpenGLRenderForm::OnTimerExpired(Osp::Base::Runtime::Timer & timer) {
-	_timer->Start(TIMER_INTERVAL_MS);
 
-    OnDrawFrame();
-    eglSwapBuffers(eDisplay, eSurface);
+	if (isRendering) {
+		_timer->Start(TIMER_INTERVAL_MS);
+
+		OnDrawFrame();
+    	eglSwapBuffers(eDisplay, eSurface);
+	}
 }
 
 }

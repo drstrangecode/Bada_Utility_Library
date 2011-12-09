@@ -115,13 +115,15 @@ namespace DSBadaUtilityLib {
                 Frame * pFrame = Application::GetInstance()->GetAppFrame()->GetFrame();
 
                 StackBasedNavigationForm * nextform = static_cast<StackBasedNavigationForm *> (pArgs->GetAt(0));
-                nextform->FormWillAppear();
 
                 // Add new form in the stack
                 _currentFormsStack.Add(*nextform);
 
                 // Add new form on display
                 pFrame->AddControl(*nextform);
+
+                nextform->FormWillAppear();
+
                 pFrame->SetCurrentForm(*nextform);
 
                 // Show new form
@@ -143,13 +145,15 @@ namespace DSBadaUtilityLib {
                 Frame * pFrame = Application::GetInstance()->GetAppFrame()->GetFrame();
 
                 currentForm->FormWillDisappear();
-                nextform->FormWillAppear();
 
                 // Add new form in the stack
                 _currentFormsStack.Add(*nextform);
 
                 // Add new form on display
                 pFrame->AddControl(*nextform);
+
+                nextform->FormWillAppear();
+
                 pFrame->SetCurrentForm(*nextform);
 
                 // Show new form
