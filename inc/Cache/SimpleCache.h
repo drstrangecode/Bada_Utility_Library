@@ -23,8 +23,10 @@
 #include <FBase.h>
 #include <FIo.h>
 
+namespace DSBadaUtilityLib {
+
 /**
- * \brief A simple cache to store files in the application's Home directory
+ * \brief A simple cache to store files in the application's Home directory.
  *
  * This cache stores file inside the app's /Home directory
  * mapping them to a unique integer identifier.
@@ -34,8 +36,6 @@
  * is then created inside the cache.
  *
  * */
-
-namespace DSBadaUtilityLib {
 
 class SimpleCache {
 public:

@@ -148,7 +148,7 @@ void SimpleFileDownloaderThread::OnContentDownloadToBufferCompleted(RequestId re
 	params->Add(*new Integer(position));
 	params->Add(*imageBuffer);
 
-	_listenerForm->SendUserEvent(USER_EVENT_IMAGE_DOWNLOADED, params);
+	_listenerForm->SendUserEvent(USER_EVENT_FILE_DOWNLOADED, params);
 
 
 }

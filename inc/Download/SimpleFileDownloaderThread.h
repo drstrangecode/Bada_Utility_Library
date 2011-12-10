@@ -22,6 +22,9 @@
 #include <FContent.h>
 #include <FUi.h>
 
+/**
+ * \brief Main namespace for accessing the library code
+ * */
 namespace DSBadaUtilityLib {
 
 /**
@@ -31,11 +34,11 @@ namespace DSBadaUtilityLib {
  * This class uses the Bada ContentTransfer APIs in order to download
  * one ore more files simultaneously via HTTP GET.
  * Communication with this thread is achieved through the SendUserEvent() API.
- * User events are:
- *  USER_EVENT_DOWNLOAD_FILE used by the outside world to start a download, the IList of parameters
- *                            must contain the file url and an integer index
- *                            that will be passed back to the caller once the file
- *                            has been downloaded
+ * User events are:<br>
+ * <strong>USER_EVENT_DOWNLOAD_FILE</strong> used by the outside world to start a download, the IList of parameters
+ * must contain the file url and an integer index that will be passed back to the caller once the file
+ * has been downloaded.<br>
+ *
  * <code>
  *      String imageUrl = String("http://somewere.com/image.jpg");
  *
@@ -43,19 +46,19 @@ namespace DSBadaUtilityLib {
  *		fileDownloaderThread.SendUserEvent(SimpleFileDownloaderThread::USER_EVENT_DOWNLOAD_IMAGE, args);
  * </code>
  *
- * \see BuildArgumentsListForDownloadN
+ * \see BuildArgumentsListForDownloadN()
  *
- *  USER_EVENT_IMAGE_DOWNLOADED sent by this thread to the listener form once the file has been downloaded,
- *                              the provided IList of args contains in sequence:
- *                              1) The index passed as input when the download was started
- *                              2) The data buffer in form of a ByteBuffer *
- *
+ * <strong>USER_EVENT_FILE_DOWNLOADED</strong> sent by this thread to the listener form once the file has been downloaded,
+ * the provided IList of args contains in sequence:<ol>
+ * <li>The index passed as input when the download was started</li>
+ * <li>The data buffer in form of a ByteBuffer *</li>
+ * </ol>
  *	Here's what the listener form must do in order to retrieve the downloaded data,
- *	in the case of JPEG images.
- * <code>
+ *	in the case of JPEG images.<br>
+ * <pre>
  * void MainForm::OnUserEventReceivedN(RequestId requestId, Osp::Base::Collection::IList * pArgs) {
  *
- * 	if (requestId == ImagesDownloaderThread::USER_EVENT_IMAGE_DOWNLOADED) {
+ * 	if (requestId == ImagesDownloaderThread::USER_EVENT_FILE_DOWNLOADED) {
  *
  * 		Integer * index = static_cast<Integer *>(pArgs->GetAt(0));
  * 		ByteBuffer * dataBuffer = static_cast<ByteBuffer *>(pArgs->GetAt(1));
@@ -70,7 +73,7 @@ namespace DSBadaUtilityLib {
  *
  * 	}
  * }
- * </code>
+ * </pre>
  *
  * */
 
@@ -101,7 +104,7 @@ public:
 	/**
 	 * The User Event sent BY this thread to notify the listener form about completed downloads
 	 * */
-	static const int USER_EVENT_IMAGE_DOWNLOADED = 102;
+	static const int USER_EVENT_FILE_DOWNLOADED = 102;
 
 public:
     void OnContentTransferInProgress(RequestId requestID, int totalReceivedSize);
