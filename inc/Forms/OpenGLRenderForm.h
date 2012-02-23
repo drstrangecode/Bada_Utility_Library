@@ -20,7 +20,6 @@
 namespace DSBadaUtilityLib {
 
 class OpenGLRenderForm: public Osp::Ui::Controls::Form,
-        public Osp::Base::Runtime::Thread,
         public Osp::Base::Runtime::ITimerEventListener {
 
     public:
@@ -45,18 +44,37 @@ class OpenGLRenderForm: public Osp::Ui::Controls::Form,
         Osp::Base::Runtime::Timer * _timer;
         bool isRendering;
 
+
+
     public:
+        /**
+         * Use this method to start the rendering loop.
+         * */
         void StartRendering();
+
+        /**
+          * Use this method to stop the rendering loop.
+          * */
         void StopRendering();
 
     protected:
+        /**
+         * This method is invoked before the rendering loop begins.
+         * It can be used to setup the opengl environment.
+         * */
         virtual void OnStartRendering() = 0;
-        virtual void OnStopRendering() = 0;
-        virtual void OnDrawFrame() = 0;
 
-    public:
-        bool OnStart(void);
-        void OnStop(void);
+        /**
+          * This method is invoked after the rendering loop terminates.
+          * It can be used to cleanup the opengl environment.
+          * */
+        virtual void OnStopRendering() = 0;
+
+        /**
+         * This method is invoked several times per second in order to draw
+         * frames.
+         * */
+        virtual void OnDrawFrame() = 0;
 
 };
 

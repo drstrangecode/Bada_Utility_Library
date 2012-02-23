@@ -12,187 +12,198 @@ using namespace Osp::Base;
 using namespace Osp::Base::Collection;
 using namespace Osp::Ui;
 using namespace Osp::Ui::Controls;
+using namespace Osp::Ui::Animations;
 
 namespace DSBadaUtilityLib {
 
-    FormNavigationManager * FormNavigationManager::_instance = 0;
+FormNavigationManager * FormNavigationManager::_instance = 0;
 
-    FormNavigationManager * FormNavigationManager::GetInstance() {
-        if (_instance == 0) {
-            _instance = new FormNavigationManager();
-            _instance->Initialize();
-        }
-        return _instance;
-    }
+FormNavigationManager * FormNavigationManager::GetInstance() {
+	if (_instance == 0) {
+		_instance = new FormNavigationManager();
+		_instance->Initialize();
+	}
+	return _instance;
+}
 
-    FormNavigationManager::FormNavigationManager() {
+FormNavigationManager::FormNavigationManager() {
 
-    }
+}
 
-    void FormNavigationManager::Initialize() {
-        AppLog("FormNavigationManager::Initialize()");
-        _currentFormsStack.Construct();
+void FormNavigationManager::Initialize() {
+	AppLog("FormNavigationManager::Initialize()");
+	_currentFormsStack.Construct();
 
-        Form::Construct(FORM_STYLE_NORMAL);
+	Form::Construct(FORM_STYLE_NORMAL);
 
-        // Adds itself to the app frame, so we can receive user events from the event queue
-        Frame * pFrame = Application::GetInstance()->GetAppFrame()->GetFrame();
-        pFrame->AddControl(*this);
-    }
+	// Adds itself to the app frame, so we can receive user events from the event queue
+	Frame * pFrame = Application::GetInstance()->GetAppFrame()->GetFrame();
+	pFrame->AddControl(*this);
+}
 
-    void FormNavigationManager::Terminate() {
-        AppLog("FormNavigationManager::Terminate()");
-    }
+void FormNavigationManager::Terminate() {
+	AppLog("FormNavigationManager::Terminate()");
+}
 
-    void FormNavigationManager::Background() {
-        if (NumberOfFormsInCurrentStack() == 0)
-            return;
+void FormNavigationManager::Background() {
+	if (NumberOfFormsInCurrentStack() == 0)
+		return;
 
-        StackBasedNavigationForm * form = static_cast<StackBasedNavigationForm *> (_currentFormsStack.GetAt(_currentFormsStack.GetCount() - 1));
-        form->FormWillDisappear();
-    }
+	StackBasedNavigationForm * form =
+			static_cast<StackBasedNavigationForm *> (_currentFormsStack.GetAt(
+					_currentFormsStack.GetCount() - 1));
+	form->FormWillDisappear();
+}
 
-    void FormNavigationManager::Foreground() {
-        if (NumberOfFormsInCurrentStack() == 0)
-            return;
+void FormNavigationManager::Foreground() {
+	if (NumberOfFormsInCurrentStack() == 0)
+		return;
 
-        StackBasedNavigationForm * form = static_cast<StackBasedNavigationForm *> (_currentFormsStack.GetAt(_currentFormsStack.GetCount() - 1));
-        form->FormWillAppear();
-    }
+	StackBasedNavigationForm * form =
+			static_cast<StackBasedNavigationForm *> (_currentFormsStack.GetAt(
+					_currentFormsStack.GetCount() - 1));
+	form->FormWillAppear();
+}
 
-    void FormNavigationManager::LowMemoryAlert() {
-        AppLog("FormNavigationManager::LowMemoryAlert()");
+void FormNavigationManager::LowMemoryAlert() {
+	AppLog("FormNavigationManager::LowMemoryAlert()");
 
-        if (NumberOfFormsInCurrentStack() == 0)
-            return;
+	if (NumberOfFormsInCurrentStack() == 0)
+		return;
 
-        StackBasedNavigationForm * form = static_cast<StackBasedNavigationForm *> (_currentFormsStack.GetAt(_currentFormsStack.GetCount() - 1));
-        form->ReceivedLowMemoryAlert();
-    }
+	StackBasedNavigationForm * form =
+			static_cast<StackBasedNavigationForm *> (_currentFormsStack.GetAt(
+					_currentFormsStack.GetCount() - 1));
+	form->ReceivedLowMemoryAlert();
+}
 
-    void FormNavigationManager::LowBatteryAlert() {
-        AppLog("FormNavigationManager::LowBatteryAlert()");
+void FormNavigationManager::LowBatteryAlert() {
+	AppLog("FormNavigationManager::LowBatteryAlert()");
 
-        if (NumberOfFormsInCurrentStack() == 0)
-            return;
+	if (NumberOfFormsInCurrentStack() == 0)
+		return;
 
-        StackBasedNavigationForm * form = static_cast<StackBasedNavigationForm *> (_currentFormsStack.GetAt(_currentFormsStack.GetCount() - 1));
-        form->ReceivedLowBatteryAlert();
-    }
+	StackBasedNavigationForm * form =
+			static_cast<StackBasedNavigationForm *> (_currentFormsStack.GetAt(
+					_currentFormsStack.GetCount() - 1));
+	form->ReceivedLowBatteryAlert();
+}
 
-    int FormNavigationManager::NumberOfFormsInCurrentStack() {
-        return _currentFormsStack.GetCount();
-    }
+int FormNavigationManager::NumberOfFormsInCurrentStack() {
+	return _currentFormsStack.GetCount();
+}
 
-    void FormNavigationManager::PushForm(StackBasedNavigationForm * form) {
+void FormNavigationManager::PushForm(StackBasedNavigationForm * form) {
 
-        ArrayList * list = new ArrayList();
-        list->Add(*form);
+	ArrayList * list = new ArrayList();
+	list->Add(*form);
 
-        SendUserEvent(FormNavigationManager::PUSH_FORM, list);
-    }
+	SendUserEvent(FormNavigationManager::PUSH_FORM, list);
+}
 
-    void FormNavigationManager::SetRootForm(StackBasedNavigationForm * form) {
+void FormNavigationManager::SetRootForm(StackBasedNavigationForm * form) {
 
-        ArrayList * list = new ArrayList();
-        list->Add(*form);
+	ArrayList * list = new ArrayList();
+	list->Add(*form);
 
-        SendUserEvent(FormNavigationManager::SET_ROOT_FORM, list);
-    }
+	SendUserEvent(FormNavigationManager::SET_ROOT_FORM, list);
+}
 
-    void FormNavigationManager::PopForm() {
-        SendUserEvent(FormNavigationManager::POP_FORM, 0);
-    }
+void FormNavigationManager::PopForm() {
+	SendUserEvent(FormNavigationManager::POP_FORM, 0);
+}
 
-    void FormNavigationManager::OnUserEventReceivedN(RequestId requestId, IList* pArgs) {
+void FormNavigationManager::OnUserEventReceivedN(RequestId requestId,
+		IList* pArgs) {
 
-        switch (requestId) {
-            case SET_ROOT_FORM: {
-                AppLog("FormNavigationManager: setting root form");
+	switch (requestId) {
+	case SET_ROOT_FORM: {
+		AppLog("FormNavigationManager: setting root form");
 
-                AppAssertf(NumberOfFormsInCurrentStack() == 0, "This navigation stack has already a root form");
+		AppAssertf(NumberOfFormsInCurrentStack() == 0, "This navigation stack has already a root form");
 
-                Frame * pFrame = Application::GetInstance()->GetAppFrame()->GetFrame();
+		Frame * pFrame = Application::GetInstance()->GetAppFrame()->GetFrame();
 
-                StackBasedNavigationForm * nextform = static_cast<StackBasedNavigationForm *> (pArgs->GetAt(0));
+		StackBasedNavigationForm * nextForm = static_cast<StackBasedNavigationForm *> (pArgs->GetAt(0));
 
-                // Add new form in the stack
-                _currentFormsStack.Add(*nextform);
+		// Add new form in the stack
+		_currentFormsStack.Add(*nextForm);
+		// Add new form on display, the form is automatically set as the current form
+		pFrame->AddControl(*nextForm);
+		// Call FormWillAppear() on the root form
+		nextForm->FormWillAppear();
+		// Show new form
+		nextForm->Draw();
+		nextForm->Show();
 
-                // Add new form on display
-                pFrame->AddControl(*nextform);
+		delete pArgs;
+	}
+		break;
 
-                nextform->FormWillAppear();
+	case PUSH_FORM: {
+		AppLog("FormNavigationManager: pushing form");
 
-                pFrame->SetCurrentForm(*nextform);
+		AppAssertf(NumberOfFormsInCurrentStack() > 0, "This navigation stack has no root form, please set a root form with SetRootForm()");
 
-                // Show new form
-                nextform->Draw();
-                nextform->Show();
+		StackBasedNavigationForm * nextForm = static_cast<StackBasedNavigationForm *> (pArgs->GetAt(0));
+		StackBasedNavigationForm * currentForm = static_cast<StackBasedNavigationForm *> (_currentFormsStack.GetAt(_currentFormsStack.GetCount() - 1));
 
-                delete pArgs;
-            }
-                break;
+		Frame * pFrame = Application::GetInstance()->GetAppFrame()->GetFrame();
 
-            case PUSH_FORM: {
-                AppLog("FormNavigationManager: pushing form");
+		// Call FormWillDisappear() on the old form
+		currentForm->FormWillDisappear();
+		// Add new form in the stack
+		_currentFormsStack.Add(*nextForm);
+		// Add new form on display, nextForm becomes the current form
+		pFrame->AddControl(*nextForm);
+		// Re-set currentForm as the current form so we can perform a nice animation
+		pFrame->SetCurrentForm(*currentForm);
+		// Call FormWillAppear() on the new form
+		nextForm->FormWillAppear();
 
-                AppAssertf(NumberOfFormsInCurrentStack() > 0, "This navigation stack has no root form, please set a root form with SetRootForm()");
+		// Perform the transition with a nice slide-in animation
+		FrameAnimator * pAnimator = pFrame->GetFrameAnimator();
+		pAnimator->SetFormTransitionAnimation(
+				FRAME_ANIMATOR_FORM_TRANSITION_ANIMATION_TRANSLATE_LEFT, 600,
+				ANIMATION_INTERPOLATOR_EASE_IN_OUT);
 
-                StackBasedNavigationForm * nextform = static_cast<StackBasedNavigationForm *> (pArgs->GetAt(0));
-                StackBasedNavigationForm * currentForm = static_cast<StackBasedNavigationForm *> (_currentFormsStack.GetAt(_currentFormsStack.GetCount() - 1));
+		pAnimator->SetCurrentForm(*nextForm);
 
-                Frame * pFrame = Application::GetInstance()->GetAppFrame()->GetFrame();
+		delete pArgs;
+	}
+		break;
 
-                currentForm->FormWillDisappear();
+	case POP_FORM: {
+		AppLog("FormNavigationManager: popping form");
 
-                // Add new form in the stack
-                _currentFormsStack.Add(*nextform);
+		AppAssertf(NumberOfFormsInCurrentStack() > 0, "This navigation stack has no root form, please set a root form with SetRootForm()");
 
-                // Add new form on display
-                pFrame->AddControl(*nextform);
+		Frame *pFrame = Application::GetInstance()->GetAppFrame()->GetFrame();
 
-                nextform->FormWillAppear();
+		AppAssertf(_currentFormsStack.GetCount() > 1, "Illegal: Trying to pop the root form");
 
-                pFrame->SetCurrentForm(*nextform);
+		StackBasedNavigationForm * previousForm = static_cast<StackBasedNavigationForm *> (_currentFormsStack.GetAt(_currentFormsStack.GetCount() - 2));
+		StackBasedNavigationForm * currentForm = static_cast<StackBasedNavigationForm *> (_currentFormsStack.GetAt(_currentFormsStack.GetCount() - 1));
 
-                // Show new form
-                nextform->Draw();
-                nextform->Show();
+		// Call FormWillDisappear() on the current form
+		currentForm->FormWillDisappear();
+		// Call FormWillAppear() on the previous form
+		previousForm->FormWillAppear();
 
-                delete pArgs;
-            }
-                break;
+		// Perform the transition with a nice slide-out animation
+		FrameAnimator * pAnimator = pFrame->GetFrameAnimator();
+		pAnimator->SetFormTransitionAnimation(
+				FRAME_ANIMATOR_FORM_TRANSITION_ANIMATION_TRANSLATE_RIGHT, 600,
+				ANIMATION_INTERPOLATOR_EASE_IN_OUT);
 
-            case POP_FORM: {
-                AppLog("FormNavigationManager: popping form");
+		pAnimator->SetCurrentForm(*previousForm);
 
-                AppAssertf(NumberOfFormsInCurrentStack() > 0, "This navigation stack has no root form, please set a root form with SetRootForm()");
+		pFrame->RemoveControl(*currentForm);
+		_currentFormsStack.RemoveAt(_currentFormsStack.GetCount() - 1, false);
 
-                Frame *pFrame = Application::GetInstance()->GetAppFrame()->GetFrame();
-
-                if (_currentFormsStack.GetCount() > 1) {
-                    StackBasedNavigationForm * nextform = static_cast<StackBasedNavigationForm *> (_currentFormsStack.GetAt(_currentFormsStack.GetCount() - 2));
-                    StackBasedNavigationForm * currentForm = static_cast<StackBasedNavigationForm *> (_currentFormsStack.GetAt(_currentFormsStack.GetCount() - 1));
-
-                    currentForm->FormWillDisappear();
-
-                    nextform->FormWillAppear();
-
-                    // Show previous form
-                    pFrame->SetCurrentForm(*nextform);
-                    nextform->Draw();
-                    nextform->Show();
-
-                    pFrame->RemoveControl(*currentForm);
-                    _currentFormsStack.RemoveAt(_currentFormsStack.GetCount() - 1, false);
-
-                } else {
-                    AppLog("Warning: cannot pop the root form");
-                }
-            }
-                break;
-        }
-    }
+	}
+		break;
+	}
+}
 
 }

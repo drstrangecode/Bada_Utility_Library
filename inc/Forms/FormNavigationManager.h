@@ -11,6 +11,7 @@
 #include <FApp.h>
 #include <FBase.h>
 #include <FUi.h>
+#include <FUiAnimFrameAnimator.h>
 
 #include "StackBasedNavigationForm.h"
 

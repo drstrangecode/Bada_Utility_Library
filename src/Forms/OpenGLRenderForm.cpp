@@ -28,33 +28,6 @@ OpenGLRenderForm::OpenGLRenderForm() {
 OpenGLRenderForm::~OpenGLRenderForm() {
 }
 
-bool OpenGLRenderForm::OnStart() {
-    AppLog("OpenGLRenderForm::OnStart() [Starting render thread]");
-
-    InitEGL();
-
-    OnStartRendering();
-
-    _timer = new Timer();
-    _timer->Construct(*this);
-    _timer->Start(TIMER_INTERVAL_MS);
-
-    return true;
-}
-
-void OpenGLRenderForm::OnStop() {
-    AppLog("OpenGLRenderForm::OnStop() [Stopping render thread]");
-
-   _timer->Cancel();
-   delete _timer;
-
-   OnStopRendering();
-
-   DestroyEGL();
-
-
-}
-
 result OpenGLRenderForm::OnInitializing(void) {
     result r = E_SUCCESS;
     return r;
@@ -73,8 +46,13 @@ void OpenGLRenderForm::StartRendering() {
 
     isRendering = true;
 
-    Thread::Construct(THREAD_TYPE_EVENT_DRIVEN);
-    this->Start();
+    InitEGL();
+
+    OnStartRendering();
+
+    _timer = new Timer();
+    _timer->Construct(*this);
+    _timer->Start(TIMER_INTERVAL_MS);
 
 }
 
@@ -85,8 +63,13 @@ void OpenGLRenderForm::StopRendering() {
 
 	isRendering = false;
 
-    this->Stop();
-    this->Join();
+	_timer->Cancel();
+	delete _timer;
+
+	OnStopRendering();
+
+	DestroyEGL();
+
 }
 
 void OpenGLRenderForm::InitEGL() {
@@ -157,7 +140,44 @@ void OpenGLRenderForm::OnTimerExpired(Osp::Base::Runtime::Timer & timer) {
 
 		OnDrawFrame();
     	eglSwapBuffers(eDisplay, eSurface);
+
+    	static float     fps = 0.0f;
+    	static float     updateInterval = 1000.0f;
+    	static float     timeSinceLastUpdate = 0.0f;
+    	static float     frameCount = 0;
+    	static long long currentTick;
+    	static long long lastTick;
+    	static bool      isFirst = true;
+
+    	if (isFirst)
+    	{
+    		SystemTime::GetTicks(currentTick);
+    		lastTick = currentTick;
+    		isFirst = false;
+    	}
+
+    	frameCount++;
+    	SystemTime::GetTicks(currentTick);
+
+    	float elapsed = currentTick - lastTick;
+
+    	lastTick = currentTick;
+    	timeSinceLastUpdate += elapsed;
+
+    	if (timeSinceLastUpdate > updateInterval)
+    	{
+    		if (timeSinceLastUpdate)
+    		{
+    			fps = (frameCount / timeSinceLastUpdate) * 1000.f;
+    			AppLog("FPS: %f frames/sec\n", fps);
+
+    			frameCount = 0;
+    			timeSinceLastUpdate -= updateInterval;
+    		}
+    	}
+
 	}
+
 }
 
 }
